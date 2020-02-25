@@ -31,15 +31,65 @@ except:
     arcpy.AddError("This tool requires an ArcInfo license.")
     sys.exit("ArcInfo license not available")
 
-# Script arguments
+##Script arguments
 ReviewerWorkspace = arcpy.GetParameterAsText(0)
 Sessions = arcpy.GetParameterAsText(1)
 Fields = arcpy.GetParameterAsText(2)
 Workspace = arcpy.GetParameterAsText(3)
 ShapeName = arcpy.GetParameterAsText(4)
 
+
 SessionsList = Sessions.split(";")
 FieldsList = Fields.split(";")
+
+# Script functions
+def Renamefield_Pro(temp_shape, temp_out, workspace, ShapeFileName):
+    
+    RenameFields = ["ORIGINTABLE", "ORIGINCHECK", "REVIEWSTATUS", "CORRECTIONSTATUS", "VERIFICATIONSTATUS", "REVIEWTECHNICIAN", "REVIEWDATE", "CORRECTIONTECHNICIAN", "CORRECTIONDATE", "VERIFICATIONTECHNICIAN", "VERIFICATIONDATE", "LIFECYCLESTATUS", "LIFECYCLEPHASE"]
+    NewNames = ["ORIG_TABLE", "ORIG_CHECK", "ERROR_DESC", "COR_STATUS", "VER_STATUS", "REV_TECH", "REV_DATE", "COR_TECH", "COR_DATE", "VER_TECH", "VER_DATE", "STATUS", "PHASE"]
+
+    arcpy.CopyFeatures_management(temp_shape, temp_out)
+    
+    fields = arcpy.ListFields(temp_out)  #get a list of fields for each feature class
+
+    for field in fields:    
+        if "REVTABLEMAIN" in field.name:
+            if field.type == "OID" or field.type == "Geometry" :
+                continue
+            if "OBJECTID" in field.name:
+                ## Manage OID field
+                arcpy.AddField_management(temp_out, "FeatureOID", field.type)
+                expr = "!" + field.name + "!"
+                arcpy.CalculateField_management(temp_out, "FeatureOID", expr, "PYTHON3")
+                arcpy.DeleteField_management(temp_out, field.name)
+                continue
+            
+            fieldNames = field.name.split("_")
+            outname = fieldNames[1]
+            if fieldNames[1] in RenameFields:
+                i = RenameFields.index(outname)
+                outname = NewNames[i]
+            # add a new field using the same properties as the original field
+            arcpy.AddField_management(temp_out, outname, field.type)
+
+            # calculate the values of the new field
+            # set it to be equal to the old field       
+            exp = "!" + field.name + "!"
+            arcpy.CalculateField_management(temp_out, outname, exp, "PYTHON3")
+
+            # delete the old fields
+            arcpy.DeleteField_management(temp_out, field.name)
+        else:
+            if field.type == "OID" or field.type == "Geometry" :
+                continue
+            arcpy.DeleteField_management(temp_out, field.name)
+     
+    ##Save the layer as a shapefile
+    arcpy.FeatureClassToShapefile_conversion(temp_out, workspace)
+    shape_1 = workspace + "\\tmp_out.shp"
+    arcpy.Rename_management(shape_1, ShapeFileName)
+
+
 
 # Check if shapefiles created by script exists. If so error and do not process.
 if ".shp" in ShapeName:
@@ -58,6 +108,7 @@ if arcpy.GetInstallInfo()['ProductName'] == 'Desktop':
 	gdbname = now.strftime("%Y%m%dT%H%M%S") + ".mdb"
 else :
 	gdbname = now.strftime("%Y%m%dT%H%M%S") + ".gdb"
+arcpy.AddMessage("Product is  " + arcpy.GetInstallInfo()['ProductName'])
 
 TempWksp = Workspace + "\\Temp\\" + gdbname
 TempDir = Workspace + "\\Temp"
@@ -342,7 +393,7 @@ if Exists == False:
             + "information.")
             arcpy.AddJoin_management("Final_pt", "LINKGUID", REVTABLEMAIN,
             "ID", "KEEP_COMMON")
-
+            
             # Make new layer with appropriate output field names
             shape = ShapeName[:-4]
             arcpy.MakeFeatureLayer_management("Final_pt", shape, "", "",
@@ -351,9 +402,14 @@ if Exists == False:
 
             arcpy.AddMessage("\nCreating point shapefile.")
             shape_out = ShapeName[:-4]
+            
+            if arcpy.GetInstallInfo()['ProductName'] == 'Desktop':           
+                # Save the layer as a shapefile
+                arcpy.FeatureClassToShapefile_conversion(shape, Workspace)
+            else:
+                tmp_out = TempWksp + "\\tmp_out"
+                Renamefield_Pro(shape, tmp_out, Workspace, ShapeName)
 
-            # Save the layer as a shapefile
-            arcpy.FeatureClassToShapefile_conversion(shape, Workspace)
 
             # -------------------------------
             # Process Errors with no geometry
@@ -455,3 +511,4 @@ if Exists == False:
 else:
     arcpy.AddError("Please choose new output directory or delete " \
     + "existing files")
+
