@@ -2,7 +2,7 @@ Manage Data Reviewer records
 =============================
 
 Tutorial summary
-================
+----------------
 
 This tutorial guides you through using a sample workspace and a set of python
 scripts that allow you to manage ArcGIS Data Reviewer records. This tutorial is
@@ -14,16 +14,24 @@ or work with others that don’t have Data Reviewer.
 25 minutes 
 
 **Software requirements**
-1. Install ArcGIS Pro 2.5 or later (with Data Reviewer license)
-  	>Note: If you currently do not have a license for ArcGIS Data Reviewer, you can request a free 21-day trial.
-2. From the landing page of this repository, click on the **Code** tab.
-3. Click the **Clone or download** button.
-4. Choose **Download Zip** and specify a location.
-5. Browse to the download location you specified to find the zip file.
-5. Extract the contents in the zip file to a convenient location on your computer, such as C:\\\\Data_Reviewer.
-	>Note: The toolbox and tools used in the tutorial are found in the **source** subfolder of the extracted content.
+-  ArcGIS Pro 2.5 or later (Advanced license)
+-  ArcGIS Data Reviewer
+	>Note: If you currently do not have a license for ArcGIS Data Reviewer, you can request a free 21-day trial.
 
-The **Data Reviewer Management Tools** toolbox contains the following two tools.
+**Data requirements**
+
+The data for this tutorial is available in the **tutorial** folder of this repository. This package contains an ArcGIS Pro project package containing sample data from Austin, Texas, and a sample geodatabase containing Data Reviewer results. To download the repository and extract the tutorial, follow these steps:
+
+1. From the landing page of this repository, click on the **Code** tab.
+2. Click the **Clone or download** button.
+3. Choose **Download Zip** and specify a location.
+4. Browse to the download location you specified, to find the compressed zip file.
+5. Extract the contents of the compressed zip file to a convenient location on your computer (such as C:\\\\Data_Reviewer_MDRR).
+	>Note: The toolbox and tools used in the tutorial are found in the **source** subfolder of the extracted content.
+6. Browse to the **tutorial** subfolder in the extracted content.
+7. Extract the **tutorial** subfolder's content to a convenient location on your computer (such as C:\\\\Data_Reviewer_MDRR\\tutorial).
+
+The **Data Reviewer Management Tools** toolbox contains the following script tools.
 
 -   The **Copy Data Reviewer Records** tool takes records from one or more
     Reviewer sessions and copies them into another Reviewer session. It works
@@ -42,16 +50,27 @@ The **Data Reviewer Management Tools** toolbox contains the following two tools.
     export and share records and information with others that do not have Data
     Reviewer.
 
-**Data requirements**
+Open the project
+----------------
 
-The data for this tutorial is available in the extracted **tutorial** subfolder from the downloaded zip file. 
-The zipped content in the **tutorial** folder contains an ArcGIS Pro project package preloaded with sample data from the Austin, Texas and a sample Data Reviewer workspace geodatabase preloaded with error records.
+In this exercise, you will open a project package using ArcGIS Pro and verify its contents.
 
-1. Browse to the **tutorial** subfolder in the extracted content.
-2. Extract the **tutorial** subfolder's content to a convenient location on your computer, such as C:\\\\Data_Reviewer\tutorial
+1. Start ArcGIS Pro and sign in if necessary.
+   > Caution: If you have not already downloaded the tutorial data, check the **Data requirements** section in this tutorial.
+
+2. On the start page, under your recent projects, click **Open another project**.
+   > Note:  If you already have a project open, click **Open** on the **Quick Access Toolbar** and go to step 4.
+
+3. In the **Open Project** dialog window, browse to the location where the tutorial content was extracted.
+
+4. Choose the **DataReviewer_ManageRecords.ppkx** file.
+
+5. Click **OK**.
+
+The project opens with a topographic basemap containing city data zoomed to Austin, Texas.
 
 Copy records
-============
+------------
 
 In this section you will use the **Copy Records** tool to copy records from one Reviewer workspace to another.
 
@@ -59,8 +78,9 @@ In this section you will use the **Copy Records** tool to copy records from one 
 
 2.  In the **Add Toolbox** dialog box, browse to \<your extracted location\>\\source and
     choose the **Data Reviewer Management Tools** toolbox.
-
+    	
 3.  Click **OK**.
+	>The toolbox is added to the project.
 
 4.  In the **Catalog** pane, expand the **Data Reviewer Management Tools** toolbox.
 
@@ -80,23 +100,23 @@ In this section you will use the **Copy Records** tool to copy records from one 
 
 10. In the **Output Reviewer Workspace** dialog box that appears, browse to \<Project\>\\Folders\>\\DataReviewer_ManageRecords_1ec5e6\>\\p20\>\\**DataReviewer_CopyRecords.gdb** and choose it.
     
-10. Click **OK**.
+11. Click **OK**.
 
-11. Click the **Output Reviewer Session Name** drop-down arrow and choose
+12. Click the **Output Reviewer Session Name** drop-down arrow and choose
     **Copied Data Reviewer Records**.
 
-12.  Ensure that the **Create Log File** check box is checked to record
+13.  Ensure that the **Create Log File** check box is checked to record
     information to a log file about any errors that are copied.
 
 ![A screenshot of the completed Copy Data Reviewer Records tool in Geoprocessing pane](images/Copy_Data_Reviewer_Records_full.png)
 
-13. Click **Run**.
+14. Click **Run**.
 
 	>Note: This may take a few minutes since it is exporting all the records from the input Reviewer session.
 
-14.  To review the results in more detail, open the log file that gets created at \<your extracted location\>\\tutorial.
+15.  To review the results in more detail, open the log file that gets created at \<your extracted location\>\\tutorial.
 
-Preview copied records
+Review copied records
 ----------------------
 
 The Reviewer Results table contains all the records resulting from a review. In
@@ -115,7 +135,7 @@ The Reviewer Results table appears with the copied records.
 Learn more about [phases of error results](https://pro.arcgis.com/en/pro-app/help/data/validating-data/results-and-life-cycle-phases.htm) and how to [configure](https://pro.arcgis.com/en/pro-app/help/data/validating-data/configure-the-reviewer-results-pane.htm) the Reviewer Results pane.
 
 Export records to a shapefile
-=============================
+-----------------------------
 
 In this exercise, you will use the **Export Data Reviewer Records to Shapefile**
 tool to export the copied records to a shapefile.
@@ -138,16 +158,14 @@ tool to export the copied records to a shapefile.
 8.  Click **OK**.
 
 9.  In the **Shapefile Name** parameter, type **Exported_DataReviewer_Records**.
-
 ![A screenshot of ArcGIS Pro's completed **Export Data Reviewer Records to Shapefile** tool in ArcGIS Pro's **Geoprocessing** panel](images/Export_Reviewer_Records_to_Shapefile_full.png)
-
-10.  Click **Run**.
-
+9.  Click **Run**.  
+	
 	>Note: This may take a few minutes since it is exporting all the records from the input Reviewer session.
 
 11.  If necessary, click **Close** on the *Export Data Reviewer Records to Shapefile* processing window once it is finished.
 
-Preview exported records
+Review exported records
 ------------------------
 
 In this exercise, you will preview one of the exported records and verify its
@@ -156,22 +174,35 @@ table.
 
 1.  Click the **Insert** tab.
 
-2.  Click **New Map**.
+2.  In the **Project** group, click **New Map**.
 
 3.  Click the **Map** tab.
 
-4.  Click **Add Data** and browse to the **Exported_DataReviewer_Records.shp** at
+4.  In the **Layer** group, click **Add Data** and browse to the **Exported_DataReviewer_Records.shp** at
     \<your extracted location\>\\tutorial.
 
 5.  If necessary, open the Reviewer Results table with **Copied Data Reviewer
     Records** session.
 
-	>Note: The Reviewer Results table should have been left open. If it was closed, see the previous exercise titled **Preview copied records**.
+	>Note: The Reviewer Results table should have been left open. If it was closed, see the previous exercise titled **Review copied records**.
 
-6.  Click a point in your map from the shapefile.
+6.  To symbolize Reviewer errors in the active map, perform the following steps:
 
-7.  Compare the attributes of the selected error record in the Reviewer Results
-    table to those listed in the *Pop-up* pane to verify that they match. For
+	1. Click **Edit** tab.
+
+	2. In the **Data Reviewer** group, click **Manage Quality**.
+	  	
+		>The **Manage Quality** tab is activated.
+
+	3. In the **Results** group, click **Symbolize**.
+
+		>The **Reviewer Results** layer group is added to the active map.
+
+7.  With the **Explore** tool active, click a point from the **Exported_DataReviewer_Records** feature layer.
+	>A callout box displaying information about the feature appears.
+
+8.  Compare the attributes of the selected error record in the Reviewer Results
+    table to those listed in the callout box to verify that they match. For
     example, compare the result **ID** to **FeatureOID**.
 
 	>Note: Some of the field names in the shapefile will differ slightly from
